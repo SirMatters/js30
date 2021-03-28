@@ -15,7 +15,30 @@
     </ul>
   </form>
 <script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  let input = document.querySelector('input');
+  let citiesData;
+  window.addEventListener('load', () => {
+    fetch(endpoint)
+      .then(blob => blob.json())
+      .then(data => citiesData = data)
+  })
+  let ul = document.querySelector('.suggestions');
+
+  input.addEventListener('keydown', (e) => {
+    let {value} = e.target;
+    if (!value) {
+      ul.innerHTML = '';
+      return
+    }
+    let filteredCitites = citiesData.filter(c => c.city?.toLowerCase().includes(value.toLowerCase()) || c.state?.toLowerCase().includes(value.toLowerCase()));
+    let markup = filteredCitites.reduce((a,b) => {
+      a += `<li>${b.city}</li>`;
+      return a;
+      } 
+    , '')
+    ul.innerHTML = markup
+  })
 
 </script>
 </body>
